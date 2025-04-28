@@ -290,3 +290,12 @@ export function getTagsFromRefs(
   }
   return tags;
 }
+
+// Converts plain URLs into <radicle-external-link> components
+export function convertUrlsToExternalLinks(text: string): string {
+  const urlRegex = /(https?:\/\/[^\s]+)/g;
+  return text.replace(
+    urlRegex,
+    '<radicle-external-link href="$1">$1</radicle-external-link>',
+  );
+}
