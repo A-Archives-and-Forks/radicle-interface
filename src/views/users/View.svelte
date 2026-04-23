@@ -127,11 +127,7 @@
 
   <div slot="sidebar">
     <!-- Banner/Avatar at top -->
-    {#if nodeAvatarUrl}
-      <img style:width="100%" alt="User banner" src={nodeAvatarUrl} />
-    {:else}
-      <UserAvatar nodeId={did.pubkey} styleWidth="100%" />
-    {/if}
+    <UserAvatar nodeId={did.pubkey} styleWidth="100%" />
 
     <div class="sidebar">
       <div class="sidebar-content">
