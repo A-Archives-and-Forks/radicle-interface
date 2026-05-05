@@ -19,6 +19,7 @@
   export let baseUrl: BaseUrl;
   export let commit: Commit;
   export let repo: Repo;
+  export let nodeId: string;
   export let nodeAvatarUrl: string | undefined;
 
   let enabledArchiveDownload = false;
@@ -69,7 +70,7 @@
   }
 </style>
 
-<Layout {nodeAvatarUrl} {baseUrl} {repo}>
+<Layout {nodeId} {nodeAvatarUrl} {baseUrl} {repo}>
   <svelte:fragment slot="breadcrumb">
     <Separator />
     <Link

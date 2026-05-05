@@ -20,6 +20,7 @@
   export let issues: Issue[];
   export let repo: Repo;
   export let status: IssueState["status"];
+  export let nodeId: string;
   export let nodeAvatarUrl: string | undefined;
 
   let loading = false;
@@ -102,7 +103,7 @@
   }
 </style>
 
-<Layout {nodeAvatarUrl} {baseUrl} {repo} activeTab="issues">
+<Layout {nodeId} {nodeAvatarUrl} {baseUrl} {repo} activeTab="issues">
   <svelte:fragment slot="breadcrumb">
     <Separator />
     <Link

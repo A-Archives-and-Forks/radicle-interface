@@ -21,6 +21,7 @@
   export let patches: Patch[];
   export let repo: Repo;
   export let status: PatchState["status"];
+  export let nodeId: string;
   export let nodeAvatarUrl: string | undefined;
 
   let loading = false;
@@ -107,7 +108,7 @@
   }
 </style>
 
-<Layout {nodeAvatarUrl} {baseUrl} {repo} activeTab="patches">
+<Layout {nodeId} {nodeAvatarUrl} {baseUrl} {repo} activeTab="patches">
   <svelte:fragment slot="breadcrumb">
     <Separator />
     <Link

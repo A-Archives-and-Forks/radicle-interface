@@ -35,6 +35,7 @@
   export let repo: Repo;
   export let revision: string | undefined;
   export let tree: Tree;
+  export let nodeId: string;
   export let nodeAvatarUrl: string | undefined;
 
   $: currentRefname = formatQualifiedRefname(
@@ -101,7 +102,7 @@
   }
 </style>
 
-<Layout {nodeAvatarUrl} {baseUrl} {repo} activeTab="source">
+<Layout {nodeId} {nodeAvatarUrl} {baseUrl} {repo} activeTab="source">
   <svelte:fragment slot="breadcrumb">
     <Separator />
     <Link

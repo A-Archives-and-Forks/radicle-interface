@@ -15,6 +15,7 @@
   export let baseUrl: BaseUrl;
   export let repo: Repo;
   export let stylePaddingBottom: string = "2.5rem";
+  export let nodeId: string;
   export let nodeAvatarUrl: string | undefined;
 </script>
 
@@ -100,7 +101,7 @@
                   alt="Node avatar"
                   src={nodeAvatarUrl} />
               {:else}
-                <UserAvatar nodeId={baseUrl.hostname} styleWidth="1.5rem" />
+                <UserAvatar {nodeId} styleWidth="1.5rem" />
               {/if}
               {baseUrl.hostname}
             </Link>

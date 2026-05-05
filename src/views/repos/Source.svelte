@@ -34,6 +34,7 @@
   export let revision: string | undefined;
   export let seedingPolicy: SeedingPolicy;
   export let tree: Tree;
+  export let nodeId: string;
   export let nodeAvatarUrl: string | undefined;
 
   let mobileFileTree = false;
@@ -125,6 +126,7 @@
 
 <Layout
   {baseUrl}
+  {nodeId}
   {nodeAvatarUrl}
   {repo}
   activeTab="source"

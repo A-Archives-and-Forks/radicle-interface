@@ -167,6 +167,7 @@ export type RepoLoadedRoute =
         path: string;
         rawPath: (commit?: string) => string;
         blobResult: BlobResult;
+        nodeId: string;
         nodeAvatarUrl: string | undefined;
       };
     }
@@ -182,6 +183,7 @@ export type RepoLoadedRoute =
         revision: string | undefined;
         tree: Tree;
         commitHeaders: CommitHeader[];
+        nodeId: string;
         nodeAvatarUrl: string | undefined;
       };
     }
@@ -191,6 +193,7 @@ export type RepoLoadedRoute =
         baseUrl: BaseUrl;
         repo: Repo;
         commit: Commit;
+        nodeId: string;
         nodeAvatarUrl: string | undefined;
       };
     }
@@ -201,6 +204,7 @@ export type RepoLoadedRoute =
         repo: Repo;
         rawPath: (commit?: string) => string;
         issue: Issue;
+        nodeId: string;
         nodeAvatarUrl: string | undefined;
       };
     }
@@ -211,6 +215,7 @@ export type RepoLoadedRoute =
         repo: Repo;
         issues: Issue[];
         status: IssueState["status"];
+        nodeId: string;
         nodeAvatarUrl: string | undefined;
       };
     }
@@ -221,6 +226,7 @@ export type RepoLoadedRoute =
         repo: Repo;
         patches: Patch[];
         status: PatchState["status"];
+        nodeId: string;
         nodeAvatarUrl: string | undefined;
       };
     }
@@ -233,6 +239,7 @@ export type RepoLoadedRoute =
         patch: Patch;
         stats: Diff["stats"];
         view: PatchView;
+        nodeId: string;
         nodeAvatarUrl: string | undefined;
       };
     };
@@ -321,6 +328,7 @@ export async function loadRepoRoute(
           baseUrl: route.node,
           repo,
           commit,
+          nodeId: node.id,
           nodeAvatarUrl: node.avatarUrl,
         },
       };
@@ -372,6 +380,7 @@ async function loadPatchesView(
       patches,
       status,
       repo,
+      nodeId: node.id,
       nodeAvatarUrl: node.avatarUrl,
     },
   };
@@ -400,6 +409,7 @@ async function loadIssuesView(
       issues,
       status,
       repo,
+      nodeId: node.id,
       nodeAvatarUrl: node.avatarUrl,
     },
   };
@@ -417,7 +427,7 @@ async function loadTreeView(
 
   let repoPromise: Promise<Repo>;
   let seedingPolicyPromise: Promise<SeedingPolicy>;
-  let nodePromise: Promise<Partial<Node>>;
+  let nodePromise: Promise<Pick<Node, "id" | "avatarUrl">>;
   if (
     (previousLoaded.resource === "repo.source" ||
       previousLoaded.resource === "repo.history") &&
@@ -427,6 +437,7 @@ async function loadTreeView(
     repoPromise = Promise.resolve(previousLoaded.params.repo);
     seedingPolicyPromise = Promise.resolve(previousLoaded.params.seedingPolicy);
     nodePromise = Promise.resolve({
+      id: previousLoaded.params.nodeId,
       avatarUrl: previousLoaded.params.nodeAvatarUrl,
     });
   } else {
@@ -519,6 +530,7 @@ async function loadTreeView(
       tree,
       path,
       blobResult,
+      nodeId: node.id,
       nodeAvatarUrl: node.avatarUrl,
     },
   };
@@ -581,7 +593,7 @@ async function loadHistoryView(
 
   let repoPromise: Promise<Repo>;
   let seedingPolicyPromise: Promise<SeedingPolicy>;
-  let nodePromise: Promise<Partial<Node>>;
+  let nodePromise: Promise<Pick<Node, "id" | "avatarUrl">>;
   if (
     (previousLoaded.resource === "repo.source" ||
       previousLoaded.resource === "repo.history") &&
@@ -591,6 +603,7 @@ async function loadHistoryView(
     repoPromise = Promise.resolve(previousLoaded.params.repo);
     seedingPolicyPromise = Promise.resolve(previousLoaded.params.seedingPolicy);
     nodePromise = Promise.resolve({
+      id: previousLoaded.params.nodeId,
       avatarUrl: previousLoaded.params.nodeAvatarUrl,
     });
   } else {
@@ -670,6 +683,7 @@ async function loadHistoryView(
       revision: route.revision,
       tree,
       commitHeaders,
+      nodeId: node.id,
       nodeAvatarUrl: node.avatarUrl,
     },
   };
@@ -694,6 +708,7 @@ async function loadIssueView(route: RepoIssueRoute): Promise<RepoLoadedRoute> {
       repo,
       rawPath,
       issue,
+      nodeId: node.id,
       nodeAvatarUrl: node.avatarUrl,
     },
   };
@@ -711,7 +726,7 @@ async function loadPatchView(
 
   let repoPromise: Promise<Repo>;
   let patchPromise: Promise<Patch>;
-  let nodePromise: Promise<Partial<Node>>;
+  let nodePromise: Promise<Pick<Node, "id" | "avatarUrl">>;
 
   if (
     previousLoaded.resource === "repo.patch" &&
@@ -721,6 +736,7 @@ async function loadPatchView(
     repoPromise = Promise.resolve(previousLoaded.params.repo);
     patchPromise = Promise.resolve(previousLoaded.params.patch);
     nodePromise = Promise.resolve({
+      id: previousLoaded.params.nodeId,
       avatarUrl: previousLoaded.params.nodeAvatarUrl,
     });
   } else {
@@ -728,7 +744,7 @@ async function loadPatchView(
     patchPromise = api.repo.getPatchById(route.repo, route.patch);
     nodePromise = api.getNode();
   }
-  const [repo, patch, { avatarUrl }] = await Promise.all([
+  const [repo, patch, { id: nodeId, avatarUrl }] = await Promise.all([
     repoPromise,
     patchPromise,
     nodePromise,
@@ -798,6 +814,7 @@ async function loadPatchView(
       patch,
       stats,
       view,
+      nodeId,
       nodeAvatarUrl: avatarUrl,
     },
   };

@@ -19,6 +19,7 @@
   export let baseUrl: BaseUrl;
   export let node: NodeIdentity;
   export let did: { prefix: string; pubkey: string };
+  export let nodeId: string;
   export let nodeAvatarUrl: string | undefined;
   export let stats: NodeStats;
 </script>
@@ -103,7 +104,7 @@
               alt="Node avatar"
               src={nodeAvatarUrl} />
           {:else}
-            <UserAvatar nodeId={baseUrl.hostname} styleWidth="1.5rem" />
+            <UserAvatar {nodeId} styleWidth="1.5rem" />
           {/if}
           {baseUrl.hostname}
         </Link>

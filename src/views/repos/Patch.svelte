@@ -84,6 +84,7 @@
   export let rawPath: (commit?: string) => string;
   export let repo: Repo;
   export let view: PatchView;
+  export let nodeId: string;
   export let nodeAvatarUrl: string | undefined;
 
   function badgeColor(status: string): ComponentProps<Badge>["variant"] {
@@ -296,6 +297,7 @@
 <Layout
   {baseUrl}
   {repo}
+  {nodeId}
   {nodeAvatarUrl}
   activeTab="patches"
   stylePaddingBottom="0">

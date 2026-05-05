@@ -20,6 +20,7 @@ export interface UserLoadedRoute {
     did: { prefix: string; pubkey: string };
     baseUrl: BaseUrl;
     node: NodeIdentity;
+    nodeId: string;
     nodeAvatarUrl: string | undefined;
     stats: NodeStats;
   };
@@ -56,6 +57,7 @@ export async function loadUserRoute({
         did: parsedDid,
         baseUrl,
         node: user,
+        nodeId: node.id,
         nodeAvatarUrl: node.avatarUrl,
         stats,
       },

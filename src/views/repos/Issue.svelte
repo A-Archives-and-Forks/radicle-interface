@@ -27,6 +27,7 @@
   export let issue: Issue;
   export let repo: Repo;
   export let rawPath: (commit?: string) => string;
+  export let nodeId: string;
   export let nodeAvatarUrl: string | undefined;
 
   $: uniqueEmbeds = uniqBy(
@@ -119,6 +120,7 @@
 
 <Layout
   {baseUrl}
+  {nodeId}
   {nodeAvatarUrl}
   {repo}
   activeTab="issues"
