@@ -1,7 +1,8 @@
 <script lang="ts">
   import type { BaseUrl, CommitHeader } from "@http-client";
 
-  import { convertUrlsToExternalLinks, twemoji } from "@app/lib/utils";
+  import { twemoji } from "@app/lib/utils";
+  import { renderCommitDescription } from "@app/lib/commit";
 
   import CommitAuthorship from "./CommitAuthorship.svelte";
   import ExpandButton from "@app/components/ExpandButton.svelte";
@@ -10,9 +11,6 @@
   import InlineTitle from "@app/views/repos/components/InlineTitle.svelte";
   import Link from "@app/components/Link.svelte";
   import Id from "@app/components/Id.svelte";
-
-  import dompurify from "dompurify";
-  import escape from "lodash/escape";
 
   export let baseUrl: BaseUrl;
   export let commit: CommitHeader;
@@ -103,9 +101,7 @@
     </div>
     {#if commitMessageVisible}
       <div class="commit-message">
-        <pre>{@html dompurify.sanitize(
-            convertUrlsToExternalLinks(escape(commit.description.trim())),
-          )}</pre>
+        <pre>{@html renderCommitDescription(commit.description)}</pre>
       </div>
     {/if}
     <CommitAuthorship header={commit}>

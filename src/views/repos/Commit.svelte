@@ -1,13 +1,8 @@
 <script lang="ts">
   import type { BaseUrl, Commit, Repo } from "@http-client";
 
-  import dompurify from "dompurify";
-  import escape from "lodash/escape";
-  import {
-    baseUrlToString,
-    formatObjectId,
-    convertUrlsToExternalLinks,
-  } from "@app/lib/utils";
+  import { baseUrlToString, formatObjectId } from "@app/lib/utils";
+  import { renderCommitDescription } from "@app/lib/commit";
 
   import Button from "@app/components/Button.svelte";
   import Changeset from "@app/views/repos/Changeset.svelte";
@@ -143,8 +138,8 @@
         </span>
       </div>
       {#if header.description}
-        <pre class="description">{@html dompurify.sanitize(
-            convertUrlsToExternalLinks(escape(header.description)),
+        <pre class="description">{@html renderCommitDescription(
+            header.description,
           )}</pre>
       {/if}
     </div>

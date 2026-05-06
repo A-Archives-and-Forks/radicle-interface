@@ -1,7 +1,13 @@
 import type { BaseUrl, CommitHeader } from "@http-client";
 
+import LinkifyIt from "linkify-it";
+import dompurify from "dompurify";
+import escape from "lodash/escape";
+
 import { getDaysPassed } from "@app/lib/utils";
 import { HttpdClient } from "@http-client";
+
+const linkify = new LinkifyIt({}, { fuzzyLink: false });
 
 // A set of commits grouped by time.
 interface CommitGroup {
@@ -108,6 +114,38 @@ function groupCommitsByWeek(commits: number[]): WeeklyActivity[] {
   }
 
   return groupedCommits;
+}
+
+// Renders a commit description as safe HTML, with bare URLs converted to
+// `<radicle-external-link>` components.
+export function renderCommitDescription(text: string): string {
+  const trimmed = text.trim();
+  // Match http(s) only; avoids turning bare emails into `mailto:` links inside
+  // commit messages.
+  const matches = (linkify.match(trimmed) ?? []).filter(
+    m => m.schema === "http:" || m.schema === "https:",
+  );
+  let out = "";
+  let cursor = 0;
+  for (const m of matches) {
+    // CommonMark autolink: `<https://example.com>`. Drop the surrounding
+    // brackets from the visible output rather than rendering them as text.
+    const isAutolink =
+      trimmed[m.index - 1] === "<" && trimmed[m.lastIndex] === ">";
+    const segmentEnd = isAutolink ? m.index - 1 : m.index;
+    out += escape(trimmed.slice(cursor, segmentEnd));
+    const href = escape(m.url);
+    const display = escape(m.text);
+    out += `<radicle-external-link href="${href}">${display}</radicle-external-link>`;
+    cursor = isAutolink ? m.lastIndex + 1 : m.lastIndex;
+  }
+  out += escape(trimmed.slice(cursor));
+  return dompurify.sanitize(out, {
+    /* eslint-disable @typescript-eslint/naming-convention */
+    ADD_TAGS: ["radicle-external-link"],
+    ADD_ATTR: ["href"],
+    /* eslint-enable @typescript-eslint/naming-convention */
+  });
 }
 
 export async function loadRepoActivity(
