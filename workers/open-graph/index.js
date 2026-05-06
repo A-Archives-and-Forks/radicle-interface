@@ -38,7 +38,16 @@ function ensureInit() {
 }
 
 function parseRoute(pathname) {
-  const segments = pathname.replace(/^\//, "").split("/");
+  const segments = pathname
+    .replace(/^\//, "")
+    .split("/")
+    .map(s => {
+      try {
+        return decodeURIComponent(s);
+      } catch {
+        return s;
+      }
+    });
   const first = segments[0];
 
   if (first === "" || first === undefined) return { type: "home" };
